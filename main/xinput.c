@@ -374,5 +374,5 @@ void xinput_init(void)
   usbd_add_endpoint(XINPUT_BUSID, &xinput_in_ep);
   usbd_add_endpoint(XINPUT_BUSID, &xinput_out_ep);
 
-  xTaskCreatePinnedToCore(xinput_task, "xinput_task", 8192, NULL, 5, NULL, 1);
+  xTaskCreatePinnedToCore(xinput_task, "xinput_task", 8192, NULL, configMAX_PRIORITIES - 1, NULL, 0);
 }

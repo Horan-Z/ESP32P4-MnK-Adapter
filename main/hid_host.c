@@ -123,7 +123,7 @@ static void usbh_hid_msg_task(void *arg)
         }
         if (msg.protocol == HID_PROTOCOL_MOUSE) {
             usbh_hid_mouse_report_callback(msg.data, msg.len);
-        } else {
+        } else if(msg.protocol == HID_PROTOCOL_KEYBOARD){
             usbh_hid_keyboard_report_callback(msg.data, msg.len);
         }
     }
@@ -140,7 +140,7 @@ static void creat_msg_task(void)
         }
     }
     if (s_msg_task_handle == NULL) {
-        xTaskCreatePinnedToCore(usbh_hid_msg_task, "usbh_hid_msg_task", 8192, NULL, 5, &s_msg_task_handle, 0);
+        xTaskCreatePinnedToCore(usbh_hid_msg_task, "usbh_hid_msg_task", 8192, NULL, configMAX_PRIORITIES - 1, &s_msg_task_handle, 1);
     }
 }
 
@@ -211,9 +211,11 @@ void usbh_hid_stop(struct usbh_hid *hid_class)
     hid_int_in_t *hid_intin = (hid_int_in_t *)hid_class->user_data;
     if (hid_intin) {
         esp_timer_stop(hid_intin->timer);
+        usbh_kill_urb(&hid_class->intin_urb); 
         esp_timer_delete(hid_intin->timer);
         heap_caps_free(hid_intin->buffer);
         heap_caps_free(hid_intin);
+        hid_class->user_data = NULL; 
     }
     ESP_LOGW(TAG, "hid stop");
 }

@@ -73,7 +73,7 @@ static const char *xinput_string_descriptors[] = {
     (const char[]){0x09, 0x04},        // 0: 支持的语言 ID (0x0409 English)
     "Microsoft",                       // 1: Manufacturer
     "Xbox 360 Controller",             // 2: Product
-    "187382748279"                     // 3: Serials
+    "000000000001"                     // 3: Serials
 };
 
 // ==============================================================================
